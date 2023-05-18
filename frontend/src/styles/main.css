@@ -1,0 +1,199 @@
+@charset "UTF-8";
+:root {
+  --mainColor: #8B2635;
+  --secondColor: #34344A;
+  --mainBackgroundColor: #eee;
+  --white: #fff;
+  --light-red: #CF4F62;
+  --logoFont: "Fraunces", sans-serif;
+  --mainFont: "Red Hat Display", sans-serif;
+}
+
+/* Box sizing rules */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Remove default margin */
+body,
+h1,
+h2,
+h3,
+h4,
+p,
+figure,
+blockquote,
+dl,
+dd {
+  margin: 0;
+}
+
+/* Remove list styles, padding and margin on ul, ol elements with a class, which suggests default styling will be removed */
+ul:where([class]),
+ol:where([class]) {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Set core root defaults */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Set core body defaults */
+body {
+  min-height: 100vh;
+  text-rendering: optimizeSpeed;
+  line-height: 1.5;
+}
+
+/* A elements that don't have a class get default styles */
+a:not([class]) {
+  text-decoration-skip-ink: auto;
+}
+
+/* Make images easier to work with */
+img,
+picture {
+  max-width: 100%;
+  display: block;
+}
+
+/* Inherit fonts for inputs and buttons */
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+/* Remove all animations, transitions and smooth scroll for people that prefer not to see them */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+/* Débuggueur CSS  */
+* {
+  /* outline: 1px solid red; */
+}
+
+/* Root font size equivalent à 10px pour simplifier les calculs */
+html {
+  font-size: 0.625em; /* fallback IE8+ */
+  font-size: 0.625em; /* IE9-IE11 math fixing. See http://bit.ly/1g4X0bX */
+}
+
+/* Remove focus for mouse users */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Set core body defaults */
+body {
+  font-size: 1.6rem;
+}
+
+/* Set text selection color */
+::selection {
+  color: #000;
+  background-color: #fd0;
+}
+
+/* Set cursor pointer */
+label[for],
+button,
+input[type=submit],
+select {
+  cursor: pointer;
+}
+
+/* Remove font style on address */
+address {
+  font-style: normal;
+}
+
+/* Text meant only for screen readers. */
+.screen-reader-text {
+  clip: rect(1px, 1px, 1px, 1px);
+  height: 1px;
+  overflow: hidden;
+  width: 1px;
+  position: absolute;
+  white-space: nowrap;
+}
+
+/* Image replacement technique 2012 H5BP  - https://css-tricks.com/the-image-replacement-museum/ */
+.ir {
+  font: 0/0 a;
+  color: transparent;
+  border: 0;
+  text-shadow: none;
+}
+
+/* Print external URLs */
+@media print {
+  a {
+    text-decoration: underline;
+  }
+  a[href]:not([href^="#"])::after {
+    content: "(" attr(href) ")";
+  }
+}
+/* red-hat-display-regular - latin */
+@font-face {
+  font-display: swap;
+  /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+  font-family: "Red Hat Display";
+  font-style: normal;
+  font-weight: 400;
+  src: url("../assets/fonts/red-hat-display-v14-latin-regular.woff2") format("woff2"), url("../assets/fonts/red-hat-display-v14-latin-regular.woff") format("woff");
+  /* Chrome 5+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+/* red-hat-display-600 - latin */
+@font-face {
+  font-display: swap;
+  /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+  font-family: "Red Hat Display";
+  font-style: normal;
+  font-weight: 600;
+  src: url("../assets/fonts/red-hat-display-v14-latin-600.woff2") format("woff2"), url("../assets/fonts/red-hat-display-v14-latin-600.woff") format("woff");
+  /* Chrome 5+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+/* fraunces-600 - latin */
+@font-face {
+  font-display: swap;
+  /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+  font-family: "Fraunces";
+  font-style: normal;
+  font-weight: 600;
+  src: url("../assets/fonts/fraunces-v30-latin-600.woff2") format("woff2"), url("../assets/fonts/fraunces-v30-latin-600.woff") format("woff");
+  /* Chrome 5+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+/* fraunces-700 - latin */
+@font-face {
+  font-display: swap;
+  /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+  font-family: "Fraunces";
+  font-style: normal;
+  font-weight: 700;
+  src: url("../assets/fonts/fraunces-v30-latin-700.woff2") format("woff2"), url("../assets/fonts/fraunces-v30-latin-700.woff") format("woff");
+  /* Chrome 5+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+body {
+  background-color: var(--mainBackgroundColor);
+  font-family: var(--mainFont);
+}
+
+/*# sourceMappingURL=main.css.map */

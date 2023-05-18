@@ -1,5 +1,6 @@
 package com.killiangodet.recette.image.model;
 
+import com.killiangodet.recette.recipe.model.Recipe;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,6 +25,7 @@ public class Image {
     @Column(name = "img_format")
     private String format;
 
-    @Column(name = "img_recipeId")
-    private Integer recipeId;
+    @ManyToOne
+    @JoinColumn(name = "rcp_id", insertable = false, updatable = false)
+    private Recipe recipe;
 }

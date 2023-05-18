@@ -1,5 +1,7 @@
 package com.killiangodet.recette.user.model;
 
+import com.killiangodet.recette.gender.model.Gender;
+import com.killiangodet.recette.role.model.Role;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,8 +19,9 @@ public class User {
     @Column(name = "usr_id")
     private Integer id;
 
-    @Column(name = "usr_genderId")
-    private Integer genderId;
+    @ManyToOne
+    @JoinColumn(name = "gender_id", insertable = false, updatable = false)
+    private Gender gender;
 
     @Column(name = "usr_firstName")
     private String firstname;
@@ -41,6 +44,7 @@ public class User {
     @Column(name = "usr_membershipId")
     private Integer membershipId;
 
-    @Column(name = "usr_roleId")
-    private Integer roleId;
+    @ManyToOne
+    @JoinColumn(name = "role_id", insertable = false, updatable = false)
+    private Role role;
 }

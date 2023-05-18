@@ -1,5 +1,6 @@
 package com.killiangodet.recette.recipe.model;
 
+import com.killiangodet.recette.user.model.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,6 +31,7 @@ public class Recipe {
     @Column(name = "rcp_difficulty")
     private Integer difficulty;
 
-    @Column(name = "userId")
-    private Integer userId;
+    @ManyToOne
+    @JoinColumn(name = "usr_id", insertable = false, updatable = false)
+    private User user;
 }

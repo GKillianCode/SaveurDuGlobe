@@ -1,5 +1,6 @@
 package com.killiangodet.recette.step.model;
 
+import com.killiangodet.recette.recipe.model.Recipe;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,6 +22,7 @@ public class Step {
     @Column(name = "step_description")
     private String description;
 
-    @Column(name = "step_recipeId")
-    private Integer recipeId;
+    @ManyToOne
+    @JoinColumn(name = "rcp_id", insertable = false, updatable = false)
+    private Recipe recipe;
 }

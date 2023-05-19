@@ -1,8 +1,9 @@
-package com.killiangodet.recette.user.model;
+package com.killiangodet.recette.user.model.request;
 
 import com.killiangodet.recette.gender.GenderService;
 import com.killiangodet.recette.membership.MembershipService;
 import com.killiangodet.recette.role.RoleService;
+import com.killiangodet.recette.user.model.User;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Size;

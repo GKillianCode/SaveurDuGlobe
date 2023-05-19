@@ -1,4 +1,4 @@
-package com.killiangodet.recette.user.model;
+package com.killiangodet.recette.user.model.response;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

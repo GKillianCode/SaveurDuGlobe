@@ -1,16 +1,9 @@
 package com.killiangodet.recette.user;
 
-import com.killiangodet.recette.gender.GenderService;
-import com.killiangodet.recette.membership.MembershipService;
-import com.killiangodet.recette.role.RoleService;
-import com.killiangodet.recette.user.model.User;
-import com.killiangodet.recette.user.model.UserDTO;
-import com.killiangodet.recette.user.model.UserResponseDTO;
+import com.killiangodet.recette.user.model.request.UserDTO;
+import com.killiangodet.recette.user.model.request.UserLoginDTO;
+import com.killiangodet.recette.user.model.response.UserResponseDTO;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -40,5 +33,12 @@ public class UserController {
                 userDTO.getEmail(),
                 userDTO.getDateOfBirth()
         ));
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestBody UserLoginDTO userLoginDTO){
+        userService.getUserByEmailAndPassword(userLoginDTO);
+
+        return ResponseEntity.ok("TokenDeConnexion");
     }
 }

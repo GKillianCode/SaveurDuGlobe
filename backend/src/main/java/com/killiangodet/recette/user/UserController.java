@@ -5,6 +5,7 @@ import com.killiangodet.recette.user.model.User;
 import com.killiangodet.recette.user.model.request.UserDTO;
 import com.killiangodet.recette.user.model.request.UserLoginDTO;
 import com.killiangodet.recette.user.model.response.UserAdminResponseDTO;
+import com.killiangodet.recette.user.model.response.UserLoginResponseDTO;
 import com.killiangodet.recette.user.model.response.UserResponseDTO;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -78,10 +79,9 @@ public class UserController {
                     ExceptionMessage.class})))
     })
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody UserLoginDTO userLoginDTO) {
+    public ResponseEntity<UserLoginResponseDTO> login(@RequestBody UserLoginDTO userLoginDTO) {
         userService.getUserByEmailAndPassword(userLoginDTO);
-
-        return ResponseEntity.ok("TokenDeConnexion");
+        return ResponseEntity.ok(new UserLoginResponseDTO("TokenDeConnexion"));
     }
 
     @PostMapping("/all")

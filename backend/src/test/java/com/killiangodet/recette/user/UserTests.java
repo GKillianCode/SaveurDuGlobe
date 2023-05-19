@@ -2,7 +2,9 @@ package com.killiangodet.recette.user;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.killiangodet.recette.user.model.request.UserDTO;
+import com.killiangodet.recette.user.model.request.UserLoginDTO;
 import com.killiangodet.recette.user.model.response.UserAdminResponseDTO;
+import com.killiangodet.recette.user.model.response.UserLoginResponseDTO;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -63,6 +65,23 @@ public class UserTests {
 
         UserDTO newUserDTO = objectMapper.readValue(contentAsString, UserDTO.class);
         assert newUserDTO.equals(userDTO);
+    }
+
+    @Test
+    void testLoginUserWithoutJWT() throws Exception {
+        UserLoginDTO userLoginDTO = new UserLoginDTO("user_test@gmail.com", "passHash");
+        UserLoginResponseDTO userLoginResponseDTO = new UserLoginResponseDTO("TokenDeConnexion");
+
+        RequestBuilder request = MockMvcRequestBuilders.post("/api/user/login")
+                .contentType("application/json")
+                .content(objectMapper.writeValueAsString(userLoginDTO));
+        ResultMatcher resultStatus = MockMvcResultMatchers.status().isOk();
+        String contentAsString = mockMvc.perform(request)
+                .andExpect(resultStatus)
+                .andReturn().getResponse().getContentAsString();
+
+        UserLoginResponseDTO response = objectMapper.readValue(contentAsString, UserLoginResponseDTO.class);
+        assert response.equals(userLoginResponseDTO);
     }
 
     @Test

@@ -1,16 +1,20 @@
 package com.killiangodet.recette.user.model.response;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 @Getter
 @Setter
 @NoArgsConstructor
-public class UserResponseDTO {
+@EqualsAndHashCode(of = {"roleId", "genderId", "firstname", "lastname", "username", "email", "dateOfBirth", "membershipId"})
+public class UserAdminResponseDTO {
+
+    private Integer id;
+    private Integer roleId;
     private Integer genderId;
     private String firstname;
     private String lastname;
@@ -19,7 +23,9 @@ public class UserResponseDTO {
     private LocalDate dateOfBirth;
     private Integer membershipId;
 
-    public UserResponseDTO(Integer genderId, String firstname, String lastname, String username, String email, LocalDate dateOfBirth, Integer membershipId){
+    public UserAdminResponseDTO(Integer id, Integer roleId, Integer genderId, String firstname, String lastname, String username, String email, LocalDate dateOfBirth, Integer membershipId){
+        this.id = id;
+        this.roleId = roleId;
         this.genderId = genderId;
         this.firstname = firstname;
         this.lastname = lastname;
@@ -28,5 +34,4 @@ public class UserResponseDTO {
         this.dateOfBirth = dateOfBirth;
         this.membershipId = membershipId;
     }
-
 }

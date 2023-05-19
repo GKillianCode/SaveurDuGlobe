@@ -85,6 +85,23 @@ public class UserTests {
     }
 
     @Test
+    void testFailedLoginUserWithoutJWT() throws Exception {
+        UserLoginDTO userLoginDTO = new UserLoginDTO("user_test@gmail.com", "passHash2");
+        UserLoginResponseDTO userLoginResponseDTO = new UserLoginResponseDTO("TokenDeConnexion");
+
+        RequestBuilder request = MockMvcRequestBuilders.post("/api/user/login")
+                .contentType("application/json")
+                .content(objectMapper.writeValueAsString(userLoginDTO));
+        ResultMatcher resultStatus = MockMvcResultMatchers.status().isNotFound();
+        String contentAsString = mockMvc.perform(request)
+                .andExpect(resultStatus)
+                .andReturn().getResponse().getContentAsString();
+
+        UserLoginResponseDTO response = objectMapper.readValue(contentAsString, UserLoginResponseDTO.class);
+        assert !response.equals(userLoginResponseDTO);
+    }
+
+    @Test
     void testGetAllUsersWithParameters() throws Exception {
         UserAdminResponseDTO userAdminResponseDTO = new UserAdminResponseDTO(1, 1, 2, "User", "Test", "user_test", "user_test@gmail.com", LocalDate.of(1990,5,20), 2);
 

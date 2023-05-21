@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -22,6 +23,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/user")
+@Tag(name = "User")
 @Validated
 @CrossOrigin(origins = {"${app.api.settings.cross-origin.url}"})
 @SecurityRequirement(name = "Authorization")
@@ -29,60 +31,6 @@ public class UserController {
 
     @Autowired
     UserService userService;
-
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "OK", content = {@Content(mediaType = "application/json",
-                    schema = @Schema(implementation = UserResponseDTO.class))}),
-            @ApiResponse(responseCode = "400", description = "Invalid supplied", content = @Content(mediaType = "application/json", schema = @Schema(oneOf = {
-                    ExceptionMessage.class}))),
-            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(mediaType = "application/json", schema = @Schema(oneOf = {
-                    ExceptionMessage.class}))),
-            @ApiResponse(responseCode = "403", description = "Access denied", content = @Content(mediaType = "application/json", schema = @Schema(oneOf = {
-                    ExceptionMessage.class}))),
-            @ApiResponse(responseCode = "404", description = "User already exists", content = @Content(mediaType = "application/json", schema = @Schema(oneOf = {
-                    ExceptionMessage.class}))),
-            @ApiResponse(responseCode = "409", description = "Same name already exists", content = @Content(mediaType = "application/json", schema = @Schema(oneOf = {
-                    ExceptionMessage.class}))),
-            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(mediaType = "application/json", schema = @Schema(oneOf = {
-                    ExceptionMessage.class})))
-    })
-    @PostMapping("/register")
-    public ResponseEntity<UserResponseDTO> addUser(@RequestBody UserDTO userDTO) throws InstanceAlreadyExistsException {
-        User user = userService.saveUser(userDTO);
-
-        return ResponseEntity.ok(new UserResponseDTO(
-                userDTO.getGenderId(),
-                userDTO.getFirstname(),
-                userDTO.getLastname(),
-                userDTO.getUsername(),
-                userDTO.getEmail(),
-                userDTO.getDateOfBirth(),
-                user.getMembershipId()
-        ));
-    }
-
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "OK",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = UserResponseDTO.class))}),
-            @ApiResponse(responseCode = "400", description = "Invalid supplied", content = @Content(mediaType = "application/json", schema = @Schema(oneOf = {
-                    ExceptionMessage.class}))),
-            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(mediaType = "application/json", schema = @Schema(oneOf = {
-                    ExceptionMessage.class}))),
-            @ApiResponse(responseCode = "403", description = "Access denied", content = @Content(mediaType = "application/json", schema = @Schema(oneOf = {
-                    ExceptionMessage.class}))),
-            @ApiResponse(responseCode = "404", description = "User not found", content = @Content(mediaType = "application/json", schema = @Schema(oneOf = {
-                    ExceptionMessage.class}))),
-            @ApiResponse(responseCode = "409", description = "Same name already exists", content = @Content(mediaType = "application/json", schema = @Schema(oneOf = {
-                    ExceptionMessage.class}))),
-            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(mediaType = "application/json", schema = @Schema(oneOf = {
-                    ExceptionMessage.class})))
-    })
-    @PostMapping("/login")
-    public ResponseEntity<UserLoginResponseDTO> login(@RequestBody UserLoginDTO userLoginDTO) {
-        userService.getUserByEmailAndPassword(userLoginDTO);
-        return ResponseEntity.ok(new UserLoginResponseDTO("TokenDeConnexion"));
-    }
 
     @PostMapping("/all")
     public List<UserAdminResponseDTO> getAll(@RequestParam Integer nbResultPerPage, @RequestParam Integer offset) {

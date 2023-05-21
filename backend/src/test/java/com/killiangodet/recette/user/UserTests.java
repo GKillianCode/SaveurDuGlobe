@@ -1,12 +1,14 @@
 package com.killiangodet.recette.user;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.killiangodet.recette.config.AccountCredentials;
 import com.killiangodet.recette.role.RoleService;
 import com.killiangodet.recette.user.model.request.UserDTO;
 import com.killiangodet.recette.user.model.request.UserLoginDTO;
 import com.killiangodet.recette.user.model.response.UserAdminResponseDTO;
 import com.killiangodet.recette.user.model.response.UserLoginResponseDTO;
 import jakarta.transaction.Transactional;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,12 +19,16 @@ import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.test.web.servlet.result.StatusResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
+
+import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -76,7 +82,9 @@ public class UserTests {
 
     @Test
     void testGetAllUsersWithParameters() throws Exception {
-        UserAdminResponseDTO userAdminResponseDTO = new UserAdminResponseDTO(2, 1, 2, "User", "Test", "user_test", "user_test@gmail.com", LocalDate.of(1990,5,20), 2);
+        UserAdminResponseDTO userAdminResponseDTO = new UserAdminResponseDTO(
+                2, 4, 1, "Son", "Gokû", "Gokû", "son_goku@gmail.com", LocalDate.of(1989,4,26), 2
+        );
 
         RequestBuilder request = MockMvcRequestBuilders.post("/api/user/all?nbResultPerPage=5&offset=0")
                 .contentType("application/json")

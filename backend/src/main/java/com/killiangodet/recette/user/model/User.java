@@ -2,10 +2,7 @@ package com.killiangodet.recette.user.model;
 
 import com.killiangodet.recette.role.model.Role;
 import jakarta.persistence.*;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -17,6 +14,7 @@ import java.util.Collection;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode(of = {"genderId", "firstname", "lastname", "pseudo", "dateOfBirth", "username"})
 public class User implements UserDetails {
 

@@ -8,6 +8,8 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -105,5 +107,15 @@ public class UserService {
      */
     public void save(User newUser) {
         userRepository.save(newUser);
+    }
+
+    public User getUserByUsername(String username) {
+        User user = userRepository.findByUsername(username);
+
+        if(user == null){
+            throw new EntityNotFoundException();
+        }
+
+        return user;
     }
 }

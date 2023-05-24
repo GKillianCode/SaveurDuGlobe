@@ -1,17 +1,14 @@
 package com.killiangodet.recette.user.model.response;
 
 import com.killiangodet.recette.role.model.Role;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 
 @Getter
 @Setter
 @NoArgsConstructor
-@EqualsAndHashCode(of = {"roleId", "genderId", "firstname", "lastname", "username", "email", "dateOfBirth", "membershipId"})
+@EqualsAndHashCode(of = {"roleId", "genderId", "firstname", "lastname", "pseudo", "username", "dateOfBirth", "membershipId"})
 public class UserAdminResponseDTO {
 
     private Integer userId;

@@ -1,6 +1,6 @@
 package com.killiangodet.recette.user;
 
-import com.killiangodet.recette.config.JWTTokenProvider;
+// import com.killiangodet.recette.config.JWTTokenProvider;
 import com.killiangodet.recette.role.model.Role;
 import com.killiangodet.recette.role.repository.RoleRepository;
 import com.killiangodet.recette.user.model.User;
@@ -23,8 +23,8 @@ public class RegisterController {
     @Autowired
     private AuthenticationManager authenticationManager;
 
-    @Autowired
-    private JWTTokenProvider jwtTokenProvider;
+    //@Autowired
+    //private JWTTokenProvider jwtTokenProvider;
 
     @Autowired
     private UserService userService;

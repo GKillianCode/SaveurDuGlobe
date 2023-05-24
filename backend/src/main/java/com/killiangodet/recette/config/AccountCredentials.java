@@ -1,8 +1,10 @@
 package com.killiangodet.recette.config;
 
+import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
+@AllArgsConstructor
 public class AccountCredentials {
     private String username;
     private String password;
@@ -20,11 +22,6 @@ public class AccountCredentials {
     }
 
     public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public AccountCredentials(String username, String password){
-        this.username = username;
         this.password = password;
     }
 }

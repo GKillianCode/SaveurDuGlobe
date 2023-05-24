@@ -10,10 +10,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 
@@ -25,6 +22,7 @@ import java.util.Optional;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode(of = {"firstname", "lastname", "username", "pseudo", "dateOfBirth", "genderId"})
 public class UserDTO {
     @Size(min = 2, max = 50, message = "Fistname not valid")
@@ -47,13 +45,4 @@ public class UserDTO {
     @Min(value = 1, message = "GenderId not valid")
     private Integer genderId;
 
-    public UserDTO(String firstname, String lastname, String pseudo, String username, String password, LocalDate dateOfBirth, Integer genderId){
-        this.firstname = firstname;
-        this.lastname = lastname;
-        this.pseudo = pseudo;
-        this.username = username;
-        this.password = password;
-        this.genderId = genderId;
-        this.dateOfBirth = dateOfBirth;
-    }
 }

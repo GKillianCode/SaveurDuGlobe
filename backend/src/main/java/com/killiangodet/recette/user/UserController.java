@@ -42,10 +42,10 @@ public class UserController {
      *
      * @param nbResultPerPage: Nombre de résultat par page
      * @param offset: Numéro de page
-     * @return
+     * @return une liste d'utilisateur sous la forme UserAdminResponseDTO
      */
-    //@PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN', 'TEST')")
-    @PostMapping("/all")
+    //@PreAuthorize("hasAnyRole('ROLE_SUPER_ADMIN', 'ROLE_ADMIN', 'ROLE_TEST')")
+    @GetMapping("/all")
     public List<UserAdminResponseDTO> getAll(@RequestParam Integer nbResultPerPage, @RequestParam Integer offset) {
         return userService.getAllUserWithLimit(nbResultPerPage, offset);
     }

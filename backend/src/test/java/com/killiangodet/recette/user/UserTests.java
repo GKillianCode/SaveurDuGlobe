@@ -62,7 +62,7 @@ public class UserTests {
     public void setUp() {
         bCryptPasswordEncoder = new BCryptPasswordEncoder(10);
 
-        this.bearerToken = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzb25fZ29rdUBnbWFpbC5jb20iLCJhdXRoIjoiVEVTVCIsImV4cCI6MTY4NDg5MjQ1N30.bzb8PzOHhcglsDYhraqN5YZZ_sdC6dgD4abLRIDC6Vk";
+        this.bearerToken = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzb25fZ29rdUBnbWFpbC5jb20iLCJhdXRoIjoiUk9MRV9URVNUIiwiZXhwIjoxNjg0OTU4OTcyfQ.KoUQ0VKWi0libBExL3sX2p_eL1O9IiqeZFL0UAmxDdQ";
 
         mockMvc = MockMvcBuilders
                 .webAppContextSetup(webApplicationContext)
@@ -101,12 +101,11 @@ public class UserTests {
     @Test
     void testGetAllUsersWithParameters() throws Exception {
         UserAdminResponseDTO userAdminResponseDTO = new UserAdminResponseDTO(
-                2, 4, 1, "Son", "Gokû", "Gokû", "son_goku@gmail.com", LocalDate.of(1989,4,26), 2
+                2, 4, 1, "Son", "Gokû", "Goku", "son_goku@gmail.com", LocalDate.of(1989,4,26), 2
         );
 
-        RequestBuilder request = MockMvcRequestBuilders.post("/api/user/all?nbResultPerPage=5&offset=0")
-                .contentType("application/json")
-                .header("Authorization", "Bearer " + this.bearerToken);
+        RequestBuilder request = MockMvcRequestBuilders.get("/api/user/all?nbResultPerPage=5&offset=0")
+                .header("Authorization", this.bearerToken);
         ResultMatcher resultStatus = MockMvcResultMatchers.status().isOk();
         String contentAsString = mockMvc.perform(request)
                 .andExpect(resultStatus)
@@ -137,7 +136,7 @@ public class UserTests {
                 .contentType("application/json")
                 .content(objectMapper.writeValueAsString(userChangePasswordDTO))
                 .principal(authentication)
-                .header("Authorization", "Bearer " + this.bearerToken);
+                .header("Authorization", this.bearerToken);
         ResultMatcher resultStatus = MockMvcResultMatchers.status().isOk();
         String contentAsString = mockMvc.perform(request)
                 .andExpect(resultStatus)

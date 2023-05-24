@@ -14,11 +14,13 @@ import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.ResultMatcher;
@@ -36,6 +38,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@WithMockUser(username = "son_goku@gmail.com", password = "SonGoku#1989", roles = {"TEST"})
 @Transactional
 public class UserTests {
 
@@ -56,13 +59,17 @@ public class UserTests {
 
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    private String bearerToken;
+    private Authentication authentication;
+
+    @Value("${test_email}")
+    private String email;
 
     @BeforeEach
     public void setUp() {
         bCryptPasswordEncoder = new BCryptPasswordEncoder(10);
 
-        this.bearerToken = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzb25fZ29rdUBnbWFpbC5jb20iLCJhdXRoIjoiUk9MRV9URVNUIiwiZXhwIjoxNjg0OTU4OTcyfQ.KoUQ0VKWi0libBExL3sX2p_eL1O9IiqeZFL0UAmxDdQ";
+        User user = userService.getUserByUsername(this.email);
+        this.authentication = new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword());
 
         mockMvc = MockMvcBuilders
                 .webAppContextSetup(webApplicationContext)
@@ -104,8 +111,8 @@ public class UserTests {
                 2, 4, 1, "Son", "Gokû", "Goku", "son_goku@gmail.com", LocalDate.of(1989,4,26), 2
         );
 
-        RequestBuilder request = MockMvcRequestBuilders.get("/api/user/all?nbResultPerPage=5&offset=0")
-                .header("Authorization", this.bearerToken);
+        RequestBuilder request = MockMvcRequestBuilders.get("/api/user/all?nbResultPerPage=20&offset=0");
+
         ResultMatcher resultStatus = MockMvcResultMatchers.status().isOk();
         String contentAsString = mockMvc.perform(request)
                 .andExpect(resultStatus)
@@ -123,26 +130,21 @@ public class UserTests {
      */
     @Test
     void testChangePassword() throws Exception {
-        String email = "son_goku@gmail.com";
         String oldPassword = "SonGoku#1989";
         String newPassword = "SonGoku#19891";
-
-        User user = userService.getUserByUsername(email);
-        Authentication authentication = new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword());
 
         UserChangePasswordDTO userChangePasswordDTO = new UserChangePasswordDTO(oldPassword, newPassword);
 
         RequestBuilder request = MockMvcRequestBuilders.patch("/api/user/change_password")
                 .contentType("application/json")
                 .content(objectMapper.writeValueAsString(userChangePasswordDTO))
-                .principal(authentication)
-                .header("Authorization", this.bearerToken);
+                .principal(authentication);
         ResultMatcher resultStatus = MockMvcResultMatchers.status().isOk();
-        String contentAsString = mockMvc.perform(request)
+        mockMvc.perform(request)
                 .andExpect(resultStatus)
                 .andReturn().getResponse().getContentAsString();
 
-        User userWithNewPassword = userService.getUserByUsername(email);
+        User userWithNewPassword = userService.getUserByUsername(this.email);
 
         assertTrue(bCryptPasswordEncoder.matches(newPassword, userWithNewPassword.getPassword()));
     }

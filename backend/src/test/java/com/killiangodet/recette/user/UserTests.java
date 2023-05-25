@@ -141,8 +141,7 @@ public class UserTests {
                 .principal(authentication);
         ResultMatcher resultStatus = MockMvcResultMatchers.status().isOk();
         mockMvc.perform(request)
-                .andExpect(resultStatus)
-                .andReturn().getResponse().getContentAsString();
+                .andExpect(resultStatus);
 
         User userWithNewPassword = userService.getUserByUsername(this.email);
 

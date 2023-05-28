@@ -10,4 +10,5 @@ import org.springframework.web.bind.annotation.RestController;
 @Validated
 @CrossOrigin(origins = {"${app.api.settings.cross-origin.url}"})
 public class MembershipController {
+
 }

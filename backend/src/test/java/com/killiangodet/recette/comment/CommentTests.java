@@ -3,6 +3,9 @@ package com.killiangodet.recette.comment;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.killiangodet.recette.comment.model.Comment;
 import com.killiangodet.recette.comment.model.request.CommentDTO;
+import com.killiangodet.recette.comment.model.request.CommentDeleteDTO;
+import com.killiangodet.recette.recipe.RecipeService;
+import com.killiangodet.recette.recipe.model.Recipe;
 import com.killiangodet.recette.user.UserService;
 import com.killiangodet.recette.user.model.User;
 import jakarta.transaction.Transactional;
@@ -11,6 +14,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -38,6 +42,9 @@ public class CommentTests {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    RecipeService recipeService;
 
     @Autowired
     MockMvc mockMvc;
@@ -114,6 +121,27 @@ public class CommentTests {
         CommentDTO newCommentDTO = new CommentDTO(updatedComment.getDescription(), updatedComment.getRating().getId(), updatedComment.getRecipe().getId());
 
         assertNotEquals(originalCommentDTO, newCommentDTO);
+    }
+
+    @Test
+    void testDeleteCommentWithExistsComment() throws Exception {
+        Integer recipeId = 1;
+        User user = userService.getUserByUsername(this.email);
+        Comment comment = commentService.getCommentByUserIdAndRecipeId(user.getId(), recipeId);
+        CommentDeleteDTO commentDeleteDTO = new CommentDeleteDTO(recipeId);
+        Recipe recipe = recipeService.getRecipeById(recipeId);
+
+        RequestBuilder request = MockMvcRequestBuilders.delete("/api/comment/delete")
+                .contentType("application/json")
+                .content(objectMapper.writeValueAsString(commentDeleteDTO))
+                .principal(authentication);
+        ResultMatcher resultStatus = MockMvcResultMatchers.status().isOk();
+        mockMvc.perform(request)
+                .andExpect(resultStatus);
+
+        Boolean isExistsComment = commentService.existsCommentByUserAndRecipe(user, recipe);
+
+        assertFalse(isExistsComment);
     }
 
 

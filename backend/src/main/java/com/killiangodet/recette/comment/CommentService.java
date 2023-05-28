@@ -4,6 +4,7 @@ import com.killiangodet.recette.comment.model.Comment;
 import com.killiangodet.recette.comment.repository.CommentRepository;
 import com.killiangodet.recette.recipe.model.Recipe;
 import com.killiangodet.recette.user.model.User;
+import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,13 +19,12 @@ public class CommentService {
         commentRepository.save(comment);
     }
 
-    public Comment getCommentByUserAndRecipe(User user, Recipe recipe) {
+    public Boolean existsCommentByUserAndRecipe(User user, Recipe recipe) {
         Comment comment = commentRepository.findOneCommentByUserAndRecipe(user, recipe);
         if(comment == null){
-            throw new EntityNotFoundException();
+            return false;
         }
-
-        return comment;
+        return true;
     }
 
     public Comment getCommentByUserIdAndRecipeId(Integer userId, Integer recipeId) {
@@ -34,5 +34,9 @@ public class CommentService {
         }
 
         return comment;
+    }
+
+    public void deleteComment(Comment comment) {
+        commentRepository.delete(comment);
     }
 }

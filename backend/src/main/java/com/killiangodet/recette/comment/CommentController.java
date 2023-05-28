@@ -40,6 +40,13 @@ public class CommentController {
     @Autowired
     RatingService ratingService;
 
+    /**
+     * Ajoute un commentaire
+     *
+     * @param authentication
+     * @param commentDTO
+     * @return "Le commentaire a été posté." en cas de réussite
+     */
     @PostMapping("/post")
     public ResponseEntity<String> postComment(Authentication authentication, @RequestBody CommentDTO commentDTO){
         Recipe recipe = recipeService.getRecipeById(commentDTO.getRecipeId());
@@ -62,6 +69,14 @@ public class CommentController {
         return ResponseEntity.ok("Le commentaire a été posté.");
     }
 
+    /**
+     * Met à jour le description et la note d'un commentaire, un utilisateur ne peut mettre
+     * qu'un seul commentaire par recette.
+     *
+     * @param authentication
+     * @param commentDTO
+     * @return "Le commentaire a été mis à jour." en cas de réussite.
+     */
     @PatchMapping("/update")
     public ResponseEntity<String> updateComment(Authentication authentication, @RequestBody CommentDTO commentDTO){
         Rating rating = ratingService.getRatingById(commentDTO.getRatingId());
@@ -83,6 +98,13 @@ public class CommentController {
         return ResponseEntity.ok("Le commentaire a été mis à jour.");
     }
 
+    /**
+     * Supprime un commentaire à partir de l'utilisateur qui là porté.
+     *
+     * @param authentication
+     * @param commentDeleteDTO
+     * @return "Le commentaire à été supprimé !" en cas de réussite.
+     */
     @DeleteMapping("/delete")
     public ResponseEntity<String> deleteComment(Authentication authentication, @RequestBody CommentDeleteDTO commentDeleteDTO){
         User user = userService.getUserByUsername(authentication.getName());
@@ -97,6 +119,6 @@ public class CommentController {
 
         commentService.deleteComment(comment);
 
-        return ResponseEntity.ok("Le commentaire à été supprimé.");
+        return ResponseEntity.ok("Le commentaire à été supprimé !");
     }
 }

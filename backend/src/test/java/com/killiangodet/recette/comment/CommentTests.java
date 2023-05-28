@@ -78,6 +78,12 @@ public class CommentTests {
                 .build();
     }
 
+    /**
+     * Vérifie le point d'api "/api/comment/post" qui permet à un utilisateur de poster
+     * un commentaire avec une note
+     *
+     * @throws Exception
+     */
     @Test
     void testAddComment() throws Exception {
         Integer recipeId = 2;
@@ -99,6 +105,12 @@ public class CommentTests {
         assertEquals(commentDTO, newCommentDTO);
     }
 
+    /**
+     * Vérifie le point d'api "/api/comment/update" qui permet à un utilisateur de noter une recette
+     * et d'y laisser un commentaire.
+     *
+     * @throws Exception
+     */
     @Test
     void testUpdateComment() throws Exception {
         Integer recipeId = 1;
@@ -123,6 +135,11 @@ public class CommentTests {
         assertNotEquals(originalCommentDTO, newCommentDTO);
     }
 
+    /**
+     * Vérifie le point d'api "/api/comment/delete" qui permet à un utilisateur de supprimer son commentaire + la note
+     *
+     * @throws Exception
+     */
     @Test
     void testDeleteCommentWithExistsComment() throws Exception {
         Integer recipeId = 1;

@@ -1,7 +1,9 @@
 package com.killiangodet.recette.user;
 
 import com.killiangodet.recette.exceptions.ExceptionMessage;
+import com.killiangodet.recette.membership.model.Membership;
 import com.killiangodet.recette.user.model.User;
+import com.killiangodet.recette.user.model.request.UserChangeMembershipDTO;
 import com.killiangodet.recette.user.model.request.UserChangePasswordDTO;
 import com.killiangodet.recette.user.model.request.UserDTO;
 import com.killiangodet.recette.user.model.request.UserLoginDTO;
@@ -25,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.management.InstanceAlreadyExistsException;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/user")
@@ -84,6 +87,29 @@ public class UserController {
         userService.save(user);
 
         return ResponseEntity.ok("Le mot de passe a été mis à jour.");
+    }
+
+
+    /**
+     * Change l'abonnement de l'utilisateur: l'id de l'abonnement
+     *
+     * @param authentication
+     * @param userChangeMembershipDTO
+     * @return "Membership updated !" en cas de réussite.
+     */
+    @PatchMapping("/change_membership")
+    public ResponseEntity<String> changeMembership(Authentication authentication, @RequestBody UserChangeMembershipDTO userChangeMembershipDTO) {
+        User user = userService.getUserByUsername(authentication.getName());
+        Integer membershipId = user.getMembershipId();
+
+        if (Objects.equals(membershipId, userChangeMembershipDTO.getMembershipId())) {
+            throw new IllegalArgumentException("Membership ID is already the same.");
+        }
+
+        user.setMembershipId(userChangeMembershipDTO.getMembershipId());
+        userService.save(user);
+
+        return ResponseEntity.ok( "Membership updated !");
     }
 
 }

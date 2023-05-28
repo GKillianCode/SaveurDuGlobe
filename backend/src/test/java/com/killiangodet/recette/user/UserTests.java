@@ -1,9 +1,11 @@
 package com.killiangodet.recette.user;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.killiangodet.recette.config.AccountCredentials;
 import com.killiangodet.recette.role.RoleService;
 import com.killiangodet.recette.user.model.User;
+import com.killiangodet.recette.user.model.request.UserChangeMembershipDTO;
 import com.killiangodet.recette.user.model.request.UserChangePasswordDTO;
 import com.killiangodet.recette.user.model.request.UserDTO;
 import com.killiangodet.recette.user.model.request.UserLoginDTO;
@@ -123,7 +125,7 @@ public class UserTests {
     }
 
     /**
-     * Vérifier le point d'api "/api/user/change_password" qui permet à un utilisateur
+     * Vérifie le point d'api "/api/user/change_password" qui permet à un utilisateur
      * de changer son mot de passe.
      *
      * @throws Exception
@@ -147,5 +149,30 @@ public class UserTests {
 
         assertTrue(bCryptPasswordEncoder.matches(newPassword, userWithNewPassword.getPassword()));
     }
+
+    /**
+     * Vérifie le point d'api "/api/user/change_membership" qui permet à un utilisateur de
+     * changer son abonnement
+     *
+     * @throws Exception
+     */
+    @Test
+    void testChangeMembership() throws Exception {
+        UserChangeMembershipDTO userChangeMembershipDTO = new UserChangeMembershipDTO(1);
+        User user = userService.getUserByUsername(this.email);
+        int membershipId = user.getMembershipId();
+
+        RequestBuilder request = MockMvcRequestBuilders.patch("/api/user/change_membership")
+                .contentType("application/json")
+                .content(objectMapper.writeValueAsString(userChangeMembershipDTO))
+                .principal(authentication);
+        ResultMatcher resultStatus = MockMvcResultMatchers.status().isOk();
+        mockMvc.perform(request)
+                .andExpect(resultStatus);
+
+        User newUser = userService.getUserByUsername(this.email);
+        assertNotEquals(membershipId, newUser.getMembershipId());
+    }
+
 
 }

@@ -118,4 +118,14 @@ public class UserService {
 
         return user;
     }
+
+    public User getUserById(Integer userId) {
+        Optional<User> user = userRepository.findById(userId);
+
+        if(user.isEmpty()){
+            throw new EntityNotFoundException();
+        }
+
+        return user.get();
+    }
 }

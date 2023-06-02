@@ -1,28 +1,21 @@
 package com.killiangodet.recette.favoriteRecipe.model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-
-import java.io.Serializable;
+import lombok.*;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @Entity
-@Table(name = "favoriteRecipe")
+@Table(name = "favoriterecipe")
 @Getter
+@Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(of = {"id"})
+@EnableJpaRepositories
 public class FavoriteRecipe {
-
     @EmbeddedId
     private FavoriteRecipeId id;
-
-    @Embeddable
-    @Getter
-    @NoArgsConstructor
-    public static class FavoriteRecipeId implements Serializable {
-        @Column(name = "fv_recipeId")
-        private Integer recipeId;
-
-        @Column(name = "fv_userId")
-        private Integer userId;
-    }
 }
+
+
+

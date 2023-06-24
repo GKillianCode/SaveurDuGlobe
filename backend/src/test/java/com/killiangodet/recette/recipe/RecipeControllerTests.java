@@ -93,6 +93,12 @@ public class RecipeControllerTests {
                 .build();
     }
 
+    /**
+     * Vérifie le point d'api "/api/recipe/add" qui permet à un utilisateur de poster
+     * une recette
+     *
+     * @throws Exception
+     */
     @Test
     void testAddRecipe() throws Exception{
 
@@ -147,5 +153,29 @@ public class RecipeControllerTests {
         assertEquals(recipeDTO.getCookTime(), responseFullRecipeDTO.getRecipe().getCookTime());
         assertEquals(recipeDTO.getNbPerson(), responseFullRecipeDTO.getRecipe().getNbPerson());
         assertEquals(recipeDTO.getImageDTO().getDescription(), responseFullRecipeDTO.getImage().getDescription());
+    }
+
+    @Test
+    void testFailedAddRecipeWithBadImageFormat() throws Exception{
+        RecipeDTO recipeDTO = new RecipeDTO(
+                "Quatre-quarts moelleux facile",
+                "Super quatre-quarts moelleux et facile",
+                25, 40, 1, 6,
+                new ArrayList<>(),
+                new ArrayList<>(),
+                new ArrayList<>(),
+                new ImageDTO(
+                "data:image/webp;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYC=",
+                "Image de quatre-quarts moelleux"
+                )
+        );
+
+        RequestBuilder request = MockMvcRequestBuilders.post("/api/recipe/add")
+                .contentType("application/json")
+                .content(objectMapper.writeValueAsString(recipeDTO))
+                .principal(authentication);
+        ResultMatcher resultStatus = MockMvcResultMatchers.status().is5xxServerError();
+        mockMvc.perform(request)
+                .andExpect(resultStatus);
     }
 }

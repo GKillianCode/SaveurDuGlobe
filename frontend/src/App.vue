@@ -6,9 +6,7 @@ export default {
 </script>
 
 <template>
-  <div class="app">
-
-  </div>
+  <RouterView />
 </template>
 
 <style lang="scss">

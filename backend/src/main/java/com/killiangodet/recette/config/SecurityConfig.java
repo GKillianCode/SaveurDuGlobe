@@ -47,7 +47,8 @@ public class SecurityConfig {
                                         "favicon.ico",
                                         "/swagger-ui/**",
                                         "/v3/**",
-                                        "/**"
+                                        "/**",
+                                        "/ressources/recipesCovers/**"
                                 ).permitAll()
                                 .anyRequest().authenticated()
                                 .and().addFilterBefore(new JwtExceptionHandlerFilter(), JWTAuthorizationFilter.class)
@@ -74,7 +75,8 @@ public class SecurityConfig {
                 "/webjars/**",
                 "/swagger-ui/**",
                 "/v3/**",
-                "favicon.ico"
+                "favicon.ico",
+                "/ressources/recipesCovers/**"
         );
     }
 

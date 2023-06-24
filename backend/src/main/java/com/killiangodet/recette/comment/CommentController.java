@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -48,7 +49,7 @@ public class CommentController {
      * @return "Le commentaire a été posté." en cas de réussite
      */
     @PostMapping("/post")
-    public ResponseEntity<String> postComment(Authentication authentication, @RequestBody CommentDTO commentDTO){
+    public ResponseEntity<String> postComment(Authentication authentication, @Valid @RequestBody CommentDTO commentDTO){
         Recipe recipe = recipeService.getRecipeById(commentDTO.getRecipeId());
         Rating rating = ratingService.getRatingById(commentDTO.getRatingId());
         User user = userService.getUserByUsername(authentication.getName());

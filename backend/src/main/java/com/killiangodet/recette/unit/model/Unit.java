@@ -1,6 +1,8 @@
 package com.killiangodet.recette.unit.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -18,6 +20,6 @@ public class Unit {
     @Column(name = "unit_name")
     private String name;
 
-    @Column(name = "unit_shortName")
+    @Column(name = "unit_short_name")
     private String shortName;
 }

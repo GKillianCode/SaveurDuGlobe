@@ -8,6 +8,5 @@ import java.util.List;
 
 public interface StepRepository extends JpaRepository<Step, Integer> {
     List<Step> findAllByRecipe(Recipe recipe);
-
     List<Step> findAllByRecipeOrderByOrderId(Recipe recipe);
 }

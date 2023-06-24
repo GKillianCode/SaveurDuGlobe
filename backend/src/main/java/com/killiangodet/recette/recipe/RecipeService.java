@@ -3,6 +3,9 @@ package com.killiangodet.recette.recipe;
 import com.killiangodet.recette.category.CategoryService;
 import com.killiangodet.recette.category.model.Category;
 import com.killiangodet.recette.category.model.CategoryDTO;
+import com.killiangodet.recette.image.ImageService;
+import com.killiangodet.recette.image.model.Image;
+import com.killiangodet.recette.image.model.ImageDTO;
 import com.killiangodet.recette.ingredient.IngredientService;
 import com.killiangodet.recette.ingredient.model.Ingredient;
 import com.killiangodet.recette.ingredient.model.response.ResponseIngredientDTO;
@@ -42,6 +45,9 @@ public class RecipeService {
 
     @Autowired
     CategoryService categoryService;
+
+    @Autowired
+    ImageService imageService;
 
     public Recipe getRecipeById(Integer recipeId) {
         Optional<Recipe> recipe = recipeRepository.findById(recipeId);
@@ -87,6 +93,7 @@ public class RecipeService {
         List<Ingredient> ingredients = ingredientService.getAllByRecipe(recipe);
         List<Step> steps = stepService.getAllByRecipe(recipe);
         List<RecipeCategory> recipeCategories = recipeCategoryService.getAllByRecipe(recipe);
+        Image image = imageService.getByRecipe(recipe);
 
         List<ResponseIngredientDTO> ingredientDTOS = new ArrayList<>();
         List<StepDTO> stepDTOS = new ArrayList<>();
@@ -113,12 +120,17 @@ public class RecipeService {
                 }
         );
 
+        ImageDTO imageDTO = new ImageDTO(
+                imageBase64,
+                image.getDescription()
+        );
+
         return new ResponseFullRecipeDTO(
                 responseRecipeDTO,
                 ingredientDTOS,
                 stepDTOS,
                 categories,
-                imageBase64
+                imageDTO
         );
     }
 }

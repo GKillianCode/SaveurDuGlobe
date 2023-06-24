@@ -17,7 +17,6 @@ export default {
             svgHeartFull.classList.toggle('icon-disabled');
 
             this.isActive = !this.isActive;
-            console.log(this.isActive);
         }
     }
 }
@@ -67,7 +66,7 @@ export default {
     border-radius: 50%;
     box-shadow: .1rem .01rem .01rem rgba(#000000, .25);
 
-    position: relative;
+    position: absolute;
 }
 
 .icon {

@@ -54,7 +54,7 @@ export default{
         background: rgba(17, 17, 17, 0.45);
         border-radius: 0 0 2rem 2rem;
         color: #fff;
-        box-shadow: 0px -1px 2px 0px rgba(0, 0, 0, 0.25);
+        box-shadow: 0 -.1rem .2rem 0 rgba(0, 0, 0, 0.25);
     }
 }
 </style>

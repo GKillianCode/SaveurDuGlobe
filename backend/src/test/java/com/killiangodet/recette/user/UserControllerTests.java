@@ -1,18 +1,13 @@
 package com.killiangodet.recette.user;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.killiangodet.recette.config.AccountCredentials;
 import com.killiangodet.recette.role.RoleService;
 import com.killiangodet.recette.user.model.User;
 import com.killiangodet.recette.user.model.request.UserChangeMembershipDTO;
 import com.killiangodet.recette.user.model.request.UserChangePasswordDTO;
 import com.killiangodet.recette.user.model.request.UserDTO;
-import com.killiangodet.recette.user.model.request.UserLoginDTO;
 import com.killiangodet.recette.user.model.response.UserAdminResponseDTO;
-import com.killiangodet.recette.user.model.response.UserLoginResponseDTO;
 import jakarta.transaction.Transactional;
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +37,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @AutoConfigureMockMvc
 @WithMockUser(username = "son_goku@gmail.com", password = "SonGoku#1989", roles = {"TEST"})
 @Transactional
-public class UserTests {
+public class UserControllerTests {
 
     @Autowired
     private UserService userService;

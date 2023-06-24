@@ -17,4 +17,7 @@ public class Category {
 
     @Column(name = "cat_name")
     private String name;
+
+    @Column(name = "cat_is_visible")
+    private Boolean isVisible;
 }

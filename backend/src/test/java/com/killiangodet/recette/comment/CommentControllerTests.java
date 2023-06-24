@@ -1,13 +1,11 @@
-package com.killiangodet.recette.favoriteRecipe;
+package com.killiangodet.recette.comment;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.killiangodet.recette.comment.CommentService;
 import com.killiangodet.recette.comment.model.Comment;
 import com.killiangodet.recette.comment.model.request.CommentDTO;
-import com.killiangodet.recette.favoriteRecipe.model.FavoriteRecipe;
-import com.killiangodet.recette.favoriteRecipe.model.request.FavoriteRecipeDTO;
+import com.killiangodet.recette.comment.model.request.CommentDeleteDTO;
 import com.killiangodet.recette.recipe.RecipeService;
+import com.killiangodet.recette.recipe.model.Recipe;
 import com.killiangodet.recette.user.UserService;
 import com.killiangodet.recette.user.model.User;
 import jakarta.transaction.Transactional;
@@ -35,16 +33,16 @@ import static org.junit.jupiter.api.Assertions.*;
 @AutoConfigureMockMvc
 @WithMockUser(username = "son_goku@gmail.com", password = "SonGoku#1989", roles = {"TEST"})
 @Transactional
-public class FavoriteRecipeTests {
+public class CommentControllerTests {
+
+    @Autowired
+    CommentService commentService;
 
     @Autowired
     UserService userService;
 
     @Autowired
     RecipeService recipeService;
-
-    @Autowired
-    FavoriteRecipeService favoriteRecipeService;
 
     @Autowired
     MockMvc mockMvc;
@@ -79,96 +77,87 @@ public class FavoriteRecipeTests {
     }
 
     /**
-     * Test l'ajout d'une recette en recette favorite
+     * Vérifie le point d'api "/api/comment/post" qui permet à un utilisateur de poster
+     * un commentaire avec une note
      *
      * @throws Exception
      */
     @Test
-    void testAddFavoriteRecipe() throws Exception {
+    void testAddComment() throws Exception {
         Integer recipeId = 2;
-        FavoriteRecipeDTO favoriteRecipeDTO = new FavoriteRecipeDTO(recipeId);
+        CommentDTO commentDTO = new CommentDTO("Superbe recette !", 5, recipeId);
 
-        RequestBuilder request = MockMvcRequestBuilders.post("/api/favorite-recipe/add")
+        RequestBuilder request = MockMvcRequestBuilders.post("/api/comment/post")
                 .contentType("application/json")
-                .content(objectMapper.writeValueAsString(favoriteRecipeDTO))
+                .content(objectMapper.writeValueAsString(commentDTO))
                 .principal(authentication);
         ResultMatcher resultStatus = MockMvcResultMatchers.status().isOk();
         mockMvc.perform(request)
                 .andExpect(resultStatus);
 
         User user = userService.getUserByUsername(this.email);
+        Comment comment = commentService.getCommentByUserIdAndRecipeId(user.getId(), recipeId);
 
-        FavoriteRecipe fv = favoriteRecipeService.findOneFavoriteRecipeByUserIdAndRecipeId(user.getId(), recipeId);
+        CommentDTO newCommentDTO = new CommentDTO(comment.getDescription(), comment.getRating().getId(), comment.getRecipe().getId());
 
-        assertNotNull(fv);
+        assertEquals(commentDTO, newCommentDTO);
     }
 
     /**
-     * Test l'ajout d'une recette qui n'existe pas en recette favorite
+     * Vérifie le point d'api "/api/comment/update" qui permet à un utilisateur de noter une recette
+     * et d'y laisser un commentaire.
      *
      * @throws Exception
      */
     @Test
-    void testFailedAddFavoriteRecipe() throws Exception {
-        Integer recipeId = 0;
-        FavoriteRecipeDTO favoriteRecipeDTO = new FavoriteRecipeDTO(recipeId);
-
-        RequestBuilder request = MockMvcRequestBuilders.post("/api/favorite-recipe/add")
-                .contentType("application/json")
-                .content(objectMapper.writeValueAsString(favoriteRecipeDTO))
-                .principal(authentication);
-        ResultMatcher resultStatus = MockMvcResultMatchers.status().isNotFound();
-        mockMvc.perform(request)
-                .andExpect(resultStatus);
-    }
-
-    /**
-     * Test la suppression d'une recette favorite
-     *
-     * @throws Exception
-     */
-    @Test
-    void testDeleteFavoriteRecipe() throws Exception {
+    void testUpdateComment() throws Exception {
         Integer recipeId = 1;
-        FavoriteRecipeDTO favoriteRecipeDTO = new FavoriteRecipeDTO(recipeId);
-
         User user = userService.getUserByUsername(this.email);
+        Comment comment = commentService.getCommentByUserIdAndRecipeId(user.getId(), recipeId);
 
-        RequestBuilder request = MockMvcRequestBuilders.delete("/api/favorite-recipe/remove")
+        CommentDTO originalCommentDTO = new CommentDTO(comment.getDescription(), comment.getRating().getId(), comment.getRecipe().getId());
+        CommentDTO updatedCommentDTO = new CommentDTO("Bonne Recette", 4, 1);
+
+        RequestBuilder request = MockMvcRequestBuilders.patch("/api/comment/update")
                 .contentType("application/json")
-                .content(objectMapper.writeValueAsString(favoriteRecipeDTO))
+                .content(objectMapper.writeValueAsString(updatedCommentDTO))
                 .principal(authentication);
         ResultMatcher resultStatus = MockMvcResultMatchers.status().isOk();
         mockMvc.perform(request)
                 .andExpect(resultStatus);
 
-        boolean existBeforeDelete = favoriteRecipeService.existsFavoriteRecipeByUserIdAndRecipeId(user.getId(), recipeId);
+        Comment updatedComment = commentService.getCommentByUserIdAndRecipeId(user.getId(), recipeId);
 
-        assertFalse(existBeforeDelete);
+        CommentDTO newCommentDTO = new CommentDTO(updatedComment.getDescription(), updatedComment.getRating().getId(), updatedComment.getRecipe().getId());
+
+        assertNotEquals(originalCommentDTO, newCommentDTO);
     }
 
     /**
-     * Test la suppression d'une recette favorite qui n'existe pas
+     * Vérifie le point d'api "/api/comment/delete" qui permet à un utilisateur de supprimer son commentaire + la note
      *
      * @throws Exception
      */
     @Test
-    void testFailedDeleteFavoriteRecipe() throws Exception{
-        Integer recipeId = 2;
-        FavoriteRecipeDTO favoriteRecipeDTO = new FavoriteRecipeDTO(recipeId);
-
+    void testDeleteCommentWithExistsComment() throws Exception {
+        Integer recipeId = 1;
         User user = userService.getUserByUsername(this.email);
+        Comment comment = commentService.getCommentByUserIdAndRecipeId(user.getId(), recipeId);
+        CommentDeleteDTO commentDeleteDTO = new CommentDeleteDTO(recipeId);
+        Recipe recipe = recipeService.getRecipeById(recipeId);
 
-        RequestBuilder request = MockMvcRequestBuilders.delete("/api/favorite-recipe/remove")
+        RequestBuilder request = MockMvcRequestBuilders.delete("/api/comment/delete")
                 .contentType("application/json")
-                .content(objectMapper.writeValueAsString(favoriteRecipeDTO))
+                .content(objectMapper.writeValueAsString(commentDeleteDTO))
                 .principal(authentication);
-        ResultMatcher resultStatus = MockMvcResultMatchers.status().isNotFound();
+        ResultMatcher resultStatus = MockMvcResultMatchers.status().isOk();
         mockMvc.perform(request)
                 .andExpect(resultStatus);
 
-        boolean existBeforeDelete = favoriteRecipeService.existsFavoriteRecipeByUserIdAndRecipeId(user.getId(), recipeId);
-        assertFalse(existBeforeDelete);
+        Boolean isExistsComment = commentService.existsCommentByUserAndRecipe(user, recipe);
+
+        assertFalse(isExistsComment);
     }
+
 
 }

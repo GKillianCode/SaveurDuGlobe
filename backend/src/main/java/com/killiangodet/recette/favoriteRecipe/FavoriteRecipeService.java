@@ -38,14 +38,11 @@ public class FavoriteRecipeService {
         User user = userService.getUserById(userId);
 
         if(recipe == null || user == null){
-            System.out.println("USER OR RECIPE FAILED");
             throw new EntityExistsException();
         }
 
-        System.out.println("EXISTS START");
         long count = favoriteRecipeRepository.countFavoriteRecipesByRecipeIdAndUserId(userId, recipeId);
 
-        System.out.println("COUNT OK");
         if(count > 0){
             return true;
         }
@@ -64,14 +61,11 @@ public class FavoriteRecipeService {
         User user = userService.getUserById(userId);
 
         if(recipe == null || user == null){
-            System.out.println("USER OR RECIPE FAILED");
             throw new EntityExistsException();
         }
 
-        System.out.println("EXISTS START");
         FavoriteRecipe fv = favoriteRecipeRepository.findFavoriteRecipesByRecipeIdAndUserId(userId, recipeId);
 
-        System.out.println("NOT NULL START");
         if(fv == null){
             throw new EntityNotFoundException();
         }

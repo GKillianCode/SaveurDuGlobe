@@ -24,9 +24,6 @@ public class RegisterController {
     @Autowired
     private AuthenticationManager authenticationManager;
 
-    //@Autowired
-    //private JWTTokenProvider jwtTokenProvider;
-
     @Autowired
     private UserService userService;
 

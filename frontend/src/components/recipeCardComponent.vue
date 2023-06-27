@@ -20,13 +20,13 @@ export default{
 </script>
 
 <template>
-    <div class="card" :style="`background-image: url(${image});`">
+    <button class="card" :style="`background-image: url(${image});`">
         <noteCardComponent :rating="rating" />
         <favoriteComponent class="card-favorite" id="1" />
         <div class="card-name">
             <p>Ma super recette</p>
         </div>
-    </div>
+    </button>
 </template>
 
 <style lang="scss" scoped>

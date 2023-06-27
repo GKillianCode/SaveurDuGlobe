@@ -5,6 +5,9 @@
   --mainBackgroundColor: #eee;
   --favoriteColor: #CF4F62;
   --white: #fff;
+  --darkGray: #DDD;
+  --gray: #EFEFEF;
+  --black: #111;
   --logoFont: "Fraunces", sans-serif;
   --mainFont: "Red Hat Display", sans-serif;
 }
@@ -194,6 +197,15 @@ address {
 body {
   background-color: var(--mainBackgroundColor);
   font-family: var(--mainFont);
+}
+
+.container {
+  width: 100%;
+  max-width: 114rem;
+  padding-left: 2rem;
+  padding-right: 2rem;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 /*# sourceMappingURL=main.css.map */

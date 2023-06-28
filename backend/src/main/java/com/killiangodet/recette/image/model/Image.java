@@ -10,6 +10,8 @@ import org.springframework.web.multipart.MultipartFile;
 @Entity
 @Table
 @Getter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Image {
 
     @Id

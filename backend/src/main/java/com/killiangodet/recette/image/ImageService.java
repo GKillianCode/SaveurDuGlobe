@@ -29,12 +29,18 @@ public class ImageService {
     }
 
     public void remove(Recipe recipe) {
-        Image image = imageRepository.findByRecipe(recipe);
+        System.out.println("IMAGE DELETE START");
+        System.out.println("IMAGE DELETE FIND");
+        Image image = imageRepository.findOneByRecipe(recipe);
 
-        imageRepository.deleteByRecipe(recipe);
-
+        System.out.println("IMAGE DELETE FILE");
         File fichier = new File(pathRecipeCover+image.getFileName()+"."+image.getFormat());
+        System.out.println("IMAGE DELETE");
         fichier.delete();
+
+        System.out.println("IMAGE DELETE BDD");
+        imageRepository.delete(image);
+        System.out.println("IMAGE DELETE BDD END");
     }
 
     public Image getByRecipe(Recipe recipe) {

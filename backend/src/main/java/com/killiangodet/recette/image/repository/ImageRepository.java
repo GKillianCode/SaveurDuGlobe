@@ -7,7 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface ImageRepository extends JpaRepository<Image, Integer> {
     void deleteByRecipe(Recipe recipe);
 
-    Image findByRecipe(Recipe recipe);
-
     Image findOneByRecipe(Recipe recipe);
 }

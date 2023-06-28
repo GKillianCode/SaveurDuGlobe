@@ -181,4 +181,21 @@ public class RecipeController {
         recipeService.remove(recipe);
     }
 
+
+    @DeleteMapping("/{id}/delete")
+    public ResponseEntity<String> delete(
+            @PathVariable("id") Integer recipeId,
+            Authentication authentication
+    ){
+        try{
+            Recipe recipe = recipeService.getRecipeById(recipeId);
+            cleanupRecipe(recipe);
+
+        } catch (Exception e){
+            return ResponseEntity.badRequest().body("");
+        }
+
+        return ResponseEntity.ok("Delete recipe success");
+    }
+
 }

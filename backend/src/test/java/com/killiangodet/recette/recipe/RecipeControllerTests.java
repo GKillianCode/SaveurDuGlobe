@@ -5,6 +5,7 @@ import com.killiangodet.recette.image.ImageService;
 import com.killiangodet.recette.image.model.ImageDTO;
 import com.killiangodet.recette.ingredient.IngredientService;
 import com.killiangodet.recette.ingredient.model.request.IngredientDTO;
+import com.killiangodet.recette.recipe.model.Recipe;
 import com.killiangodet.recette.recipe.model.request.RecipeDTO;
 import com.killiangodet.recette.recipe.model.response.ResponseFullRecipeDTO;
 import com.killiangodet.recette.recipeCategory.RecipeCategoryService;
@@ -12,9 +13,11 @@ import com.killiangodet.recette.step.StepService;
 import com.killiangodet.recette.step.model.StepDTO;
 import com.killiangodet.recette.user.UserService;
 import com.killiangodet.recette.user.model.User;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -34,8 +37,7 @@ import org.springframework.web.context.WebApplicationContext;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -100,7 +102,7 @@ public class RecipeControllerTests {
      * @throws Exception
      */
     @Test
-    void testAddRecipe() throws Exception{
+    void testAddRecipe() throws Exception {
 
         List<IngredientDTO> ingredientDTOS = new ArrayList<>();
         ingredientDTOS.add(new IngredientDTO("oeufs", 3, 6));
@@ -156,7 +158,7 @@ public class RecipeControllerTests {
     }
 
     @Test
-    void testFailedAddRecipeWithBadImageFormat() throws Exception{
+    void testFailedAddRecipeWithBadImageFormat() throws Exception {
         RecipeDTO recipeDTO = new RecipeDTO(
                 "Quatre-quarts moelleux facile",
                 "Super quatre-quarts moelleux et facile",
@@ -165,8 +167,8 @@ public class RecipeControllerTests {
                 new ArrayList<>(),
                 new ArrayList<>(),
                 new ImageDTO(
-                "data:image/webp;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYC=",
-                "Image de quatre-quarts moelleux"
+                        "data:image/webp;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYC=",
+                        "Image de quatre-quarts moelleux"
                 )
         );
 
@@ -178,4 +180,33 @@ public class RecipeControllerTests {
         mockMvc.perform(request)
                 .andExpect(resultStatus);
     }
+
+    @Test
+    void testDeleteRecipe() throws Exception {
+        int id = 3;
+
+        RequestBuilder request = MockMvcRequestBuilders.delete("/api/recipe/{id}/delete", id)
+                .principal(authentication);
+
+        ResultMatcher resultStatus = MockMvcResultMatchers.status().isOk();
+        mockMvc.perform(request)
+                .andExpect(resultStatus);
+
+        assertThrows(EntityNotFoundException.class, () -> recipeService.getRecipeById(id));
+    }
+
+    @Test
+    void testFailedDeleteRecipe() throws Exception {
+        int id = -15;
+
+        RequestBuilder request = MockMvcRequestBuilders.delete("/api/recipe/{id}/delete", id)
+                .principal(authentication);
+
+        ResultMatcher resultStatus = MockMvcResultMatchers.status().is4xxClientError();
+        mockMvc.perform(request)
+                .andExpect(resultStatus);
+
+        assertThrows(EntityNotFoundException.class, () -> recipeService.getRecipeById(id));
+    }
+
 }

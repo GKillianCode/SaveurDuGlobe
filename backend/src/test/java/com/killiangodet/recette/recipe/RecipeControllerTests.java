@@ -185,7 +185,6 @@ public class RecipeControllerTests {
     void testDeleteRecipe() throws Exception {
         int id = 3;
 
-        // Delete the recipe
         RequestBuilder request = MockMvcRequestBuilders.delete("/api/recipe/{id}/delete", id)
                 .principal(authentication);
 
@@ -193,7 +192,20 @@ public class RecipeControllerTests {
         mockMvc.perform(request)
                 .andExpect(resultStatus);
 
-        // Verify that the recipe is deleted
+        assertThrows(EntityNotFoundException.class, () -> recipeService.getRecipeById(id));
+    }
+
+    @Test
+    void testFailedDeleteRecipe() throws Exception {
+        int id = -15;
+
+        RequestBuilder request = MockMvcRequestBuilders.delete("/api/recipe/{id}/delete", id)
+                .principal(authentication);
+
+        ResultMatcher resultStatus = MockMvcResultMatchers.status().is4xxClientError();
+        mockMvc.perform(request)
+                .andExpect(resultStatus);
+
         assertThrows(EntityNotFoundException.class, () -> recipeService.getRecipeById(id));
     }
 

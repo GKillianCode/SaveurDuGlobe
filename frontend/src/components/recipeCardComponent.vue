@@ -4,8 +4,8 @@ import noteCardComponent from "./noteCardComponent.vue";
 
 export default{
     props: {
-        image: String,
-        imageDescription: String
+        // image: String,
+        // imageDescription: String
     },
     components: {
         favoriteComponent,
@@ -20,17 +20,19 @@ export default{
 </script>
 
 <template>
-    <button class="card" :style="`background-image: url(${image});`">
+    <!-- :style="`background-image: url(${image});`" -->
+    <router-link to="/" class="card" >
         <noteCardComponent :rating="rating" />
         <favoriteComponent class="card-favorite" id="1" />
         <div class="card-name">
             <p>Ma super recette</p>
         </div>
-    </button>
+    </router-link>
 </template>
 
 <style lang="scss" scoped>
 .card{
+    display: block;
     position: relative;
     width: 25.5rem;
     height: 24rem;
@@ -38,6 +40,9 @@ export default{
     box-shadow: 0 0 .4rem rgba(#000000, .5);
     background-size: cover;
     background-position: center;
+    background-image: url("../assets/images/recipe.jpg");
+    border: none;
+    text-decoration: none;
 
     &-favorite{
         position: absolute;

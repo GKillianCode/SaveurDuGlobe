@@ -208,4 +208,64 @@ body {
   margin-right: auto;
 }
 
+.section {
+  padding-bottom: 6rem;
+}
+.section-header-title {
+  margin: 4rem 0;
+  font-weight: 600;
+  font-size: 2.4rem;
+}
+
+.section:not(:last-child) {
+  box-shadow: 0 0.2rem 0.2rem 0 rgba(0, 0, 0, 0.1);
+}
+
+.cardSlider {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
+  width: calc(100% + 10rem);
+}
+.cardSlider-buttons-button {
+  position: absolute;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  background-color: #AAAAAA;
+  z-index: 10;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.cardSlider-beforebtn {
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.cardSlider-afterbtn {
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.cardSlider-afterbtn img {
+  transform: rotateZ(180deg);
+}
+.cardSlider-recipes {
+  display: flex;
+  justify-items: center;
+  width: calc(100% - 10rem);
+  overflow-y: hidden;
+  overflow-x: scroll;
+}
+.cardSlider-recipes-content {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 2rem;
+  margin-bottom: 1rem;
+}
+
 /*# sourceMappingURL=main.css.map */

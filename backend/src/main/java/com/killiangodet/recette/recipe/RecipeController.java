@@ -9,6 +9,8 @@ import com.killiangodet.recette.ingredient.model.Ingredient;
 import com.killiangodet.recette.recipe.model.Recipe;
 import com.killiangodet.recette.recipe.model.request.RecipeDTO;
 import com.killiangodet.recette.recipe.model.response.ResponseFullRecipeDTO;
+import com.killiangodet.recette.recipe.model.response.ResponseRecipeDTO;
+import com.killiangodet.recette.recipe.model.response.ResponseRecipeWithImageDTO;
 import com.killiangodet.recette.recipeCategory.RecipeCategoryService;
 import com.killiangodet.recette.recipeCategory.model.RecipeCategory;
 import com.killiangodet.recette.step.StepService;
@@ -196,6 +198,20 @@ public class RecipeController {
         }
 
         return ResponseEntity.ok("Delete recipe success");
+    }
+
+
+    @GetMapping("/recipes")
+    public List<?> searchRecipesByKeyword(
+            @RequestParam("keyword") String keyword,
+            @RequestParam("pageId") int pageId,
+            @RequestParam("nbResultPerPage") int nbResultPerPage) {
+
+        try{
+            return recipeService.searchRecipesByKeyword(keyword, pageId, nbResultPerPage);
+        } catch (Exception e){
+            return (List<?>) ResponseEntity.badRequest();
+        }
     }
 
 }

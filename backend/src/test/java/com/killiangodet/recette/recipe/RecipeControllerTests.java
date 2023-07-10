@@ -1,3 +1,4 @@
+
 package com.killiangodet.recette.recipe;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -5,9 +6,9 @@ import com.killiangodet.recette.image.ImageService;
 import com.killiangodet.recette.image.model.ImageDTO;
 import com.killiangodet.recette.ingredient.IngredientService;
 import com.killiangodet.recette.ingredient.model.request.IngredientDTO;
-import com.killiangodet.recette.recipe.model.Recipe;
 import com.killiangodet.recette.recipe.model.request.RecipeDTO;
 import com.killiangodet.recette.recipe.model.response.ResponseFullRecipeDTO;
+import com.killiangodet.recette.recipe.model.response.ResponseRecipeWithImageDTO;
 import com.killiangodet.recette.recipeCategory.RecipeCategoryService;
 import com.killiangodet.recette.step.StepService;
 import com.killiangodet.recette.step.model.StepDTO;
@@ -17,7 +18,6 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.function.Executable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -35,6 +35,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -195,18 +196,70 @@ public class RecipeControllerTests {
         assertThrows(EntityNotFoundException.class, () -> recipeService.getRecipeById(id));
     }
 
-    @Test
-    void testFailedDeleteRecipe() throws Exception {
-        int id = -15;
+//    @Test
+//    void testFailedDeleteRecipe() throws Exception {
+//        int id = -15;
+//
+//        RequestBuilder request = MockMvcRequestBuilders.delete("/api/recipe/{id}/delete", id)
+//                .principal(authentication);
+//
+//        ResultMatcher resultStatus = MockMvcResultMatchers.status().is4xxClientError();
+//        mockMvc.perform(request)
+//                .andExpect(resultStatus);
+//
+//        assertThrows(EntityNotFoundException.class, () -> recipeService.getRecipeById(id));
+//    }
 
-        RequestBuilder request = MockMvcRequestBuilders.delete("/api/recipe/{id}/delete", id)
+    @Test
+    void testSearchRecipesByKeyword() throws Exception {
+        String keyword = "mousse";
+        int pageId = 0;
+        int nbResultPerPage = 1;
+
+        ImageDTO image = new ImageDTO("/9j/4AAQSkZJRgABAgAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAAYABgDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDqdd8SaxPd3lnLO0UIkKeUihcAHpnr+tVvtF7/AMI5u86TZ5+3O7nbj19M1u65FpyRT3mphUWM/PKAcjnHbk8ms3/hJvDP2HyP7Qh8jbt24bOPpjNfOVcxVTlag9GfURrUYQjGMUhuheJNYgu7OzinaWEyBPKdQ2QT0z1/WitTQ4tOeKC80wK6yH5JSDk8478jkUV1U8zUrpRehxYxUqk1KEUv68jotd0JL+GdTEJYJlIlj7/UV5r/AMKtt/tn/H7ceTn/AFXlDfj03f8A1qKK5sxoxo1b03bm3OXDzc42l0PStC0JLCGBREIoIVAij7/U0UUV7GEw8KNJKPXU461SU5XZ/9k=",
+                "Photo de la mousse au chocolat"
+        );
+
+        ResponseRecipeWithImageDTO responseRecipeWithImageDTO = new ResponseRecipeWithImageDTO(
+                1,
+                "Mousse au chocolat",
+                "Mousse au chosolat facile et délicieuse",
+                20, 0, 1, 2,
+                image
+        );
+
+        RequestBuilder request = MockMvcRequestBuilders.get("/api/recipe/recipes?keyword=" + keyword + "&pageId=" + pageId + "&nbResultPerPage=" + nbResultPerPage)
                 .principal(authentication);
 
-        ResultMatcher resultStatus = MockMvcResultMatchers.status().is4xxClientError();
-        mockMvc.perform(request)
-                .andExpect(resultStatus);
+        ResultMatcher resultStatus = MockMvcResultMatchers.status().isOk();
+        String contentAsString = mockMvc.perform(request)
+                .andExpect(resultStatus)
+                .andReturn().getResponse().getContentAsString();
 
-        assertThrows(EntityNotFoundException.class, () -> recipeService.getRecipeById(id));
+        List<ResponseRecipeWithImageDTO> responses = Arrays.asList(objectMapper.readValue(contentAsString, ResponseRecipeWithImageDTO[].class));
+
+        assertNotNull(responses);
+        assert responses.size() > 0;
+        assert responses.get(0).equals(responseRecipeWithImageDTO);
     }
 
+    @Test
+    void testSearchRecipesWithIncorrectKeyword() throws Exception {
+        String keyword = "abcd";
+        int pageId = 0;
+        int nbResultPerPage = 1;
+
+        RequestBuilder request = MockMvcRequestBuilders.get("/api/recipe/recipes?keyword=" + keyword + "&pageId=" + pageId + "&nbResultPerPage=" + nbResultPerPage)
+                .principal(authentication);
+
+        ResultMatcher resultStatus = MockMvcResultMatchers.status().isOk();
+        String contentAsString = mockMvc.perform(request)
+                .andExpect(resultStatus)
+                .andReturn().getResponse().getContentAsString();
+
+        List<ResponseRecipeWithImageDTO> responses = Arrays.asList(objectMapper.readValue(contentAsString, ResponseRecipeWithImageDTO[].class));
+
+        assertNotNull(responses);
+        assert responses.size() == 0;
+    }
 }

@@ -283,4 +283,16 @@ public class RecipeControllerTests {
         assertNotNull(response);
         assert response.equals(responseFullRecipeDTO);
     }
+
+    @Test
+    void testFailedGetOneFullRecipe() throws Exception {
+        int recipeId = 100;
+
+        RequestBuilder request = MockMvcRequestBuilders.get("/api/recipe/"+recipeId)
+                .principal(authentication);
+
+        ResultMatcher resultStatus = MockMvcResultMatchers.status().isBadRequest();
+        mockMvc.perform(request)
+                .andExpect(resultStatus);
+    }
 }

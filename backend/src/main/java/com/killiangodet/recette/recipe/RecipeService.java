@@ -73,7 +73,7 @@ public class RecipeService {
         if (recipe.isPresent()) {
             return recipe.get();
         } else {
-            return null;
+            throw new EntityNotFoundException();
         }
     }
 

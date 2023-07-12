@@ -22,6 +22,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -203,9 +204,14 @@ public class RecipeController {
 
         try{
             Recipe recipe = recipeService.getRecipeById(recipeId);
+
+            if(recipe == null) throw new EntityNotFoundException();
+            System.out.println("null 1");
+
             responseFullRecipeDTO = recipeService.getFullRecipeDTO(recipe);
 
         } catch (Exception e){
+            System.out.println("null 2");
             return ResponseEntity.badRequest().body("Recipe not found");
         }
 

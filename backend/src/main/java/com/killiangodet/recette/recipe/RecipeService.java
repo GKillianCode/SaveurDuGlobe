@@ -69,11 +69,12 @@ public class RecipeService {
 
     public Recipe getRecipeById(Integer recipeId) {
         Optional<Recipe> recipe = recipeRepository.findById(recipeId);
+
         if (recipe.isPresent()) {
             return recipe.get();
+        } else {
+            return null;
         }
-
-        throw new EntityNotFoundException();
     }
 
     public Recipe save(Recipe recipe) {
@@ -97,7 +98,7 @@ public class RecipeService {
         recipeRepository.deleteById(recipe.getId());
     }
 
-    public ResponseFullRecipeDTO getFullRecipeDTO(Recipe recipe, String imageBase64) {
+    public ResponseFullRecipeDTO getFullRecipeDTO(Recipe recipe) {
         ResponseRecipeDTO responseRecipeDTO = new ResponseRecipeDTO(
                 recipe.getId(),
                 recipe.getTitle(),
@@ -138,6 +139,8 @@ public class RecipeService {
                 }
         );
 
+        String imageBase64 = getImageBase64(image);
+
         ImageDTO imageDTO = new ImageDTO(
                 imageBase64,
                 image.getDescription()
@@ -157,38 +160,16 @@ public class RecipeService {
 
         Page<Recipe> recipePage = recipeRepository.findByTitleContainingIgnoreCase(keyword, pageable);
         List<Recipe> recipeList = recipePage.getContent();
-        System.out.println("rl2 : "+recipeList.size());
 
-        System.out.println("GET CONTENT END");
-        System.out.println(recipeList.size());
         List<ResponseRecipeWithImageDTO> responseRecipeDTOS = new ArrayList<>();
-        System.out.println("NEW LIST DTO");
 
         for (Recipe recipe : recipeList) {
-            // Récupérer l'image associée à la recette
             Image imageData = imageService.getByRecipe(recipe);
-            if (imageData == null) {
-                // Gérer le cas où il n'y a pas d'image associée à la recette
-                continue;
-            }
 
-            // Lire les données binaires de l'image depuis le fichier
-            byte[] imageBytes;
-            try {
-                Path imagePath = Paths.get(pathRecipeCover, imageData.getFileName() + "." + imageData.getFormat());
-                imageBytes = Files.readAllBytes(imagePath);
-            } catch (IOException e) {
-                System.out.println("Erreur lors de la lecture de l'image.");
-                throw new RuntimeException(e);
-            }
+            String base64 = getImageBase64(imageData);
 
-            // Convertir les données binaires de l'image en Base64
-            String base64 = Base64.getEncoder().encodeToString(imageBytes);
-
-            // Créer l'objet ImageDTO
             ImageDTO imageDTO = new ImageDTO(base64, imageData.getDescription());
 
-            // Créer l'objet ResponseRecipeWithImageDTO et l'ajouter à la liste*/
             ResponseRecipeWithImageDTO responseRecipeDTO = new ResponseRecipeWithImageDTO(
                     recipe.getId(),
                     recipe.getTitle(),
@@ -203,6 +184,22 @@ public class RecipeService {
         }
 
         return responseRecipeDTOS;
+    }
+
+    private String getImageBase64(Image imageData) {
+        if (imageData == null) {
+            throw new IllegalArgumentException();
+        }
+
+        byte[] imageBytes;
+        try {
+            Path imagePath = Paths.get(pathRecipeCover, imageData.getFileName() + "." + imageData.getFormat());
+            imageBytes = Files.readAllBytes(imagePath);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        return Base64.getEncoder().encodeToString(imageBytes);
     }
 
 }

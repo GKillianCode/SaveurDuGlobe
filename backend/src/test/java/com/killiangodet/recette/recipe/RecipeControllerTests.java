@@ -6,6 +6,7 @@ import com.killiangodet.recette.image.ImageService;
 import com.killiangodet.recette.image.model.ImageDTO;
 import com.killiangodet.recette.ingredient.IngredientService;
 import com.killiangodet.recette.ingredient.model.request.IngredientDTO;
+import com.killiangodet.recette.recipe.model.Recipe;
 import com.killiangodet.recette.recipe.model.request.RecipeDTO;
 import com.killiangodet.recette.recipe.model.response.ResponseFullRecipeDTO;
 import com.killiangodet.recette.recipe.model.response.ResponseRecipeWithImageDTO;
@@ -261,5 +262,37 @@ public class RecipeControllerTests {
 
         assertNotNull(responses);
         assert responses.size() == 0;
+    }
+
+    @Test
+    void testGetOneFullRecipe() throws Exception {
+        int recipeId = 1;
+        Recipe recipe = recipeService.getRecipeById(recipeId);
+        ResponseFullRecipeDTO responseFullRecipeDTO = recipeService.getFullRecipeDTO(recipe);
+
+        RequestBuilder request = MockMvcRequestBuilders.get("/api/recipe/"+recipeId)
+                .principal(authentication);
+
+        ResultMatcher resultStatus = MockMvcResultMatchers.status().isOk();
+        String contentAsString = mockMvc.perform(request)
+                .andExpect(resultStatus)
+                .andReturn().getResponse().getContentAsString();
+
+        ResponseFullRecipeDTO response = objectMapper.readValue(contentAsString, ResponseFullRecipeDTO.class);
+
+        assertNotNull(response);
+        assert response.equals(responseFullRecipeDTO);
+    }
+
+    @Test
+    void testFailedGetOneFullRecipe() throws Exception {
+        int recipeId = 100;
+
+        RequestBuilder request = MockMvcRequestBuilders.get("/api/recipe/"+recipeId)
+                .principal(authentication);
+
+        ResultMatcher resultStatus = MockMvcResultMatchers.status().isBadRequest();
+        mockMvc.perform(request)
+                .andExpect(resultStatus);
     }
 }

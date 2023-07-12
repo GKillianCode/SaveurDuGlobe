@@ -5,12 +5,9 @@ import com.killiangodet.recette.exceptions.ExceptionMessage;
 import com.killiangodet.recette.image.ImageService;
 import com.killiangodet.recette.image.model.Image;
 import com.killiangodet.recette.ingredient.IngredientService;
-import com.killiangodet.recette.ingredient.model.Ingredient;
 import com.killiangodet.recette.recipe.model.Recipe;
 import com.killiangodet.recette.recipe.model.request.RecipeDTO;
 import com.killiangodet.recette.recipe.model.response.ResponseFullRecipeDTO;
-import com.killiangodet.recette.recipe.model.response.ResponseRecipeDTO;
-import com.killiangodet.recette.recipe.model.response.ResponseRecipeWithImageDTO;
 import com.killiangodet.recette.recipeCategory.RecipeCategoryService;
 import com.killiangodet.recette.recipeCategory.model.RecipeCategory;
 import com.killiangodet.recette.step.StepService;
@@ -25,6 +22,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,9 +31,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
 
@@ -160,12 +155,7 @@ public class RecipeController {
         ResponseFullRecipeDTO responseRecipeDTO = null;
 
         try {
-            Image imageData = imageService.getByRecipe(savedRecipe);
-            byte[] imageBytes = Files.readAllBytes(Paths.get(pathRecipeCover + imageData.getFileName() + "." + imageData.getFormat()));
-
-            String base64 = Base64.getEncoder().encodeToString(imageBytes);
-
-            responseRecipeDTO = recipeService.getFullRecipeDTO(savedRecipe, "data:image/jpg;base64,"+base64);
+            responseRecipeDTO = recipeService.getFullRecipeDTO(savedRecipe);
 
         } catch (Exception e) {
             cleanupRecipe(savedRecipe);
@@ -174,15 +164,6 @@ public class RecipeController {
 
         return ResponseEntity.ok().body(responseRecipeDTO);
     }
-
-    private void cleanupRecipe(Recipe recipe) {
-        ingredientService.removeAllByRecipe(recipe);
-        stepService.removeAllByRecipe(recipe);
-        recipeCategoryService.removeAllByRecipe(recipe);
-        imageService.remove(recipe);
-        recipeService.remove(recipe);
-    }
-
 
     @DeleteMapping("/{id}/delete")
     public ResponseEntity<String> delete(
@@ -212,6 +193,37 @@ public class RecipeController {
         } catch (Exception e){
             return (List<?>) ResponseEntity.badRequest();
         }
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> fullRecipe(
+            @PathVariable("id") Integer recipeId,
+            Authentication authentication
+    ){
+        ResponseFullRecipeDTO responseFullRecipeDTO = null;
+
+        try{
+            Recipe recipe = recipeService.getRecipeById(recipeId);
+
+            if(recipe == null) throw new EntityNotFoundException();
+            System.out.println("null 1");
+
+            responseFullRecipeDTO = recipeService.getFullRecipeDTO(recipe);
+
+        } catch (Exception e){
+            System.out.println("null 2");
+            return ResponseEntity.badRequest().body("Recipe not found");
+        }
+
+        return ResponseEntity.ok(responseFullRecipeDTO);
+    }
+
+    private void cleanupRecipe(Recipe recipe) {
+        ingredientService.removeAllByRecipe(recipe);
+        stepService.removeAllByRecipe(recipe);
+        recipeCategoryService.removeAllByRecipe(recipe);
+        imageService.remove(recipe);
+        recipeService.remove(recipe);
     }
 
 }

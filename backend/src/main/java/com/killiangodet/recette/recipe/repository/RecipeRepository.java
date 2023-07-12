@@ -16,4 +16,6 @@ import java.util.Optional;
 public interface RecipeRepository extends JpaRepository<Recipe, Integer> {
     Optional<Recipe> findOneByUserAndTitle(User user, String title);
     Page<Recipe> findByTitleContainingIgnoreCase(String keyword, Pageable pageable);
+
+    Optional<Recipe> findOneById(Integer recipeId);
 }

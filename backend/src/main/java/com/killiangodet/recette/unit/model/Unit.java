@@ -3,6 +3,7 @@ package com.killiangodet.recette.unit.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -10,6 +11,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "unit")
 @Getter
 @NoArgsConstructor
+@EqualsAndHashCode(of = {"id", "name", "shortName"})
 public class Unit {
 
     @Id

@@ -1,6 +1,7 @@
 package com.killiangodet.recette.recipe.model;
 
 import com.killiangodet.recette.user.model.User;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
@@ -15,6 +16,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(of = {"title", "description", "preparationTime", "cookTime", "difficulty", "nbPerson", "user"})
+@Nullable
 public class Recipe {
 
     @Id

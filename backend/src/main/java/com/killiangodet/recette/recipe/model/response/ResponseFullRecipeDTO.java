@@ -7,10 +7,7 @@ import com.killiangodet.recette.ingredient.model.request.IngredientDTO;
 import com.killiangodet.recette.ingredient.model.response.ResponseIngredientDTO;
 import com.killiangodet.recette.recipe.model.Recipe;
 import com.killiangodet.recette.step.model.StepDTO;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
@@ -18,6 +15,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode(of = {"recipe", "ingredients", "steps", "categories", "image"})
 public class ResponseFullRecipeDTO {
     private ResponseRecipeDTO recipe;
     private List<ResponseIngredientDTO> ingredients;
